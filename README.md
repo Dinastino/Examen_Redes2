@@ -127,6 +127,16 @@ Cuando un droide o terminal rebelde quiere acceder a `holonet.rebelion.org`, est
    - Y finalmente al **servidor autoritativo de `rebelion.org`**
 4. **Respuesta final**: El servidor devuelve un **registro A**, que asocia el nombre con su IP.
 
+Si el servidor DNS rebelde está fuera de servicio (por sabotaje imperial o fallo técnico):
+
+- Los nombres como `echo.base` o `command.rebelion.org` **no podrán resolverse**.
+- Las aplicaciones mostrarán errores como **“Host desconocido”**.
+- No será posible establecer conexión, aunque los servicios sigan en línea.
+- Solo sería posible acceder si se conoce la IP exacta.
+
+### Impacto para la Alianza:
+
+La red rebelde quedaría **aislada y descoordinada**, como si se cortara el hiperespacio. Las naves no podrían contactar con bases, los comandos serían inútiles, y se perdería la capacidad de respuesta rápida.
 
 ## Misión 4: “Es una trampa… de protocolos!” – TCP vs UDP en las transmisiones
 Situación: Durante la batalla espacial sobre Endor, los ingenieros de comunicación rebelde notan comportamientos distintos en las transmisiones de datos. Algunas comunicaciones deben ser rápidas aunque ocasionalmente se pierda información (por ejemplo, un stream de vídeo de una cámara X-Wing), mientras que otras deben llegar íntegras y en orden aunque tarden un poco más (por ejemplo, la transferencia de los planos de la Estrella de la Muerte). Estas diferencias corresponden al uso de distintos protocolos de transporte: UDP y TCP. Luke Skywalker, ahora piloteando su X-Wing y ejerciendo de líder en el ataque, te pregunta por qué percibe lagos de datos en unas transmisiones y retrasos en otras.
