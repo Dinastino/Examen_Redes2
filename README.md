@@ -23,7 +23,7 @@ Además, reserva una subred adicional para el enlace troncal con la antena de co
 Pregunta: ¿Cómo dividirías la red 172.16.0.0/24 en subredes para satisfacer las necesidades anteriores, asignando direcciones IP a cada segmento de la base? Indica las subredes obtenidas (con su notación de máscara /xx), la cantidad de hosts útiles en cada una, y especifica qué subred se destinaría al enlace troncal interplanetario.
 
 
-#### Respuesta
+## Respuesta
 Para dividir nuestra red en las subredes necesarias con subneting necesitamos dividir esas direcciónes utiles 254 hosts. No se pueden crear cinco subredes igualesdado que no hay suficientes hosts asi que para ahorrar en lo mas posible en este planeta inospito reducimos el tamaño al minimo siempre y cuando aun se cumpla los requisitos.
 - **Red** 176.16.0.0/24
 - **Total de direcciones disponibles:** 256  
@@ -54,3 +54,161 @@ Narrativa: En la neblina de los pantanos de Dagobah, Yoda cierra los ojos y enun
 A su lado, luces parpadeantes de un viejo router imperial recuperado iluminan tu rostro. Debes explicarle a Yoda las diferencias que percibes en la Fuerza… de la red.
 
 Pregunta: Compara el enrutamiento estático con el enrutamiento dinámico. ¿Cuáles son las ventajas e inconvenientes de cada enfoque en la administración de rutas? En tu respuesta, menciona al menos un protocolo de enrutamiento dinámico (por ejemplo, RIP u OSPF) y comenta por qué los protocolos de vector de distancia difieren de los de estado de enlace en términos de rendimiento y complejidad​
+
+## Respuesta
+A traves de la xonexion de la fuerza en ese viejo router se sienten dos tipos de rutado a traves de la holo-net. Uno vivo y uno quieto.
+
+- **El quieto o rutado estatico** es un tipo de rutado completamente manual y no automatico, el controlador galactico tiene que establecer cada ruta a mano con cada red mascara y puerto, es facil de implementar en redes pequeñas y mas seguro ya que es una ruta estatica que no se puede manipular y ademas aunque pesado y costoso en tiempo es facil de manipular y controlar ya que el administrador decide todo la red. Pero tal rutado no viene sin sus desventajas, es debil contra cambios ya que si el camino cae la ruta se corta a no ser que alguien manualmente la manipule, si una red cambia tiene que ir un operario del cuerpo de ingenieros galacticos a cambiar las rutas y es muy dificil y costoso de implementar en una gran red como una planetaria
+
+- **El vivo o rutado dinamico** es uno que no depende de su controlador, una vez se haya inciado la configuracion primaria estos routers se adaptaran a los cambios, hace que expandir la red sea mas facil ya que no tienes que establecer cada ruta manualmente y si una conexión cae no se aislara y buscara rutas alternativas. Pero como todo en esta galaxia nada es perfecto, este tipo tambien tiene sus desventajas: es mas complejo que el estático y necesita de un conocimiento mas profundo, consume mas recursos que el estatico también y necesita una configuracion mas precisa dado que un error podria dar resultado a paquetes perdidos o bucles.
+
+| Característica           | Vector de Distancia (RIP)         | Estado de Enlace (OSPF)              |
+|--------------------------|-----------------------------------|--------------------------------------|
+| **Vista de la red**      | Desde el punto de vista del vecino | Vista completa de la topología       |
+| **Métrica usada**        | Saltos                             | Costo (ancho de banda)               |
+| **Convergencia**         | Lenta                              | Rápida                               |
+| **Escalabilidad**        | Limitada                           | Alta                                 |
+| **Complejidad**          | Baja                               | Alta                                 |
+
+### Ejemplos de routing dinamico
+#### RIP (Routing Information Protocol)
+- **Tipo:** Vector de Distancia
+- **Métrica:** Número de saltos (máximo 15)
+- **Ventajas:** Muy sencillo de configurar
+- **Desventajas:** Lento en converger, poco eficiente en redes grandes
+
+#### OSPF (Open Shortest Path First)
+- **Tipo:** Estado de Enlace
+- **Métrica:** Costo (basado en ancho de banda)
+- **Ventajas:** Convergencia rápida, diseño jerárquico, apto para grandes redes
+- **Desventajas:** Más complejo de configurar y mantener
+
+| Tipo de Enrutamiento | ✅ Ventajas                                                                 | ❌ Desventajas                                                                 |
+|----------------------|------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
+| **Estático**         | - Control total sobre las rutas                                             | - No se adapta automáticamente a cambios                                       |
+|                      | - Menor consumo de recursos del router                                      | - Requiere mantenimiento manual constante                                      |
+|                      | - Mayor seguridad (sin compartir información con otros routers)             | - No escalable en redes grandes                                                |
+|                      | - Sencillez en redes pequeñas o estables                                    | - Alta probabilidad de errores humanos                                         |
+|                      |                                                                              | - Difícil implementar redundancia automática                                   |
+|                      |                                                                              |                                                                                |
+| **Dinámico**         | - Se adapta automáticamente a cambios en la red                             | - Mayor complejidad en la configuración inicial                               |
+|                      | - Requiere menos intervención manual a largo plazo                          | - Consumo de CPU, memoria y ancho de banda                                     |
+|                      | - Escalable y más eficiente en redes grandes                                | - Puede ser menos seguro si no se configura correctamente                     |
+|                      | - Permite redundancia y rutas alternativas automáticamente                  | - Dependencia del protocolo utilizado (RIP, OSPF, etc.)                        |
+|                      | - Convergencia automática ante fallos                                       | - Posibles errores de enrutamiento si hay mala planificación                  |
+
+
+## Misión 3: Los Nombres del Holonet – DNS y Resolución de Nombres
+Situación: La flota rebelde ha interceptado transmisiones imperiales que mencionan distintos códigos de planeta y nombres en clave. Para coordinar un contraataque, la Alianza necesita entender cómo los nombres de dominio galácticos se traducen en localizaciones reales. En otras palabras, requieren restablecer un servicio DNS rebelde que asocie nombres de sistemas estelares con direcciones de la red. Sin DNS, comunicarse es tan difícil como encontrar un Ewok en la noche de Endor.
+
+Narrativa: A bordo de la nave de mando Home One, los técnicos rebelde te muestran un panel donde parpadea la petición “Unknown host”. El Almirante Ackbar frunce el ceño mientras exclaims: "¡Es una trampa... de nombres! Nuestros sistemas no reconocen las direcciones de destino." Mon Mothma asiente con gravedad: "Debemos reconstruir nuestro directorio de comunicaciones. Aprendiz, ¿cómo funciona este Sistema de Nombres de Dominio nuestro? ¿Por qué es tan importante?".
+
+Tú recuerdas tus lecciones sobre cómo en la Red (o la HoloRed) se gestionan las direcciones simbólicas. Un nombre como “echo.base” debe traducirse a una dirección IP para establecer conexión. Ha llegado el momento de explicarlo claramente.
+
+Pregunta: Explica el funcionamiento básico del sistema DNS y su importancia en la comunicación en redes. ¿Cómo realiza la red rebelde (o cualquier red TCP/IP) la resolución de nombres de dominio a direcciones IP? Incluye en tu explicación qué es un servidor DNS y un registro (por ejemplo, un registro A), ilustrando con un ejemplo simple (por ejemplo: traducir holonet.rebelion.org a una dirección IP)​
+
+es.wikipedia.org
+. Además, menciona brevemente qué sucede si el servidor DNS no está disponible y cómo eso afectaría a las comunicaciones de la Alianza.
+
+## Respuesta
+
+La función de un DNS es traducir nombres de dominio legibles, como holonet.rebelion.org, en direcciones IP numéricas que los sistemas de red pueden procesar, por ejemplo, 203.0.113.42. Sin esta traducción, los dispositivos no podrían establecer comunicación usando nombres simbólicos y la red rebelde colapsaría dado que los dispositivos de red no sabrian llegar a ningun sitio.  
+Solo se podria llegar si se tiene la IP numerica para cada servicio y recordar eso es practicamente imposible, esto es un gran problema para la flota rebelde.
+
+### ¿Cómo funciona la resolución de nombres?
+
+Cuando un droide o terminal rebelde quiere acceder a `holonet.rebelion.org`, esto es lo que ocurre:
+
+1. **Consulta local**: El sistema revisa si ya conoce la IP en su caché DNS.
+2. **Petición al servidor DNS**: Si no la encuentra, pregunta a su **servidor DNS** configurado (puede ser un servidor rebelde o uno público).
+3. **Búsqueda jerárquica** Si el DNS no la encuentra:
+   - Se contacta primero al **servidor raíz (.)**
+   - Luego al **servidor TLD** (`.org`)
+   - Y finalmente al **servidor autoritativo de `rebelion.org`**
+4. **Respuesta final**: El servidor devuelve un **registro A**, que asocia el nombre con su IP.
+
+
+## Misión 4: “Es una trampa… de protocolos!” – TCP vs UDP en las transmisiones
+Situación: Durante la batalla espacial sobre Endor, los ingenieros de comunicación rebelde notan comportamientos distintos en las transmisiones de datos. Algunas comunicaciones deben ser rápidas aunque ocasionalmente se pierda información (por ejemplo, un stream de vídeo de una cámara X-Wing), mientras que otras deben llegar íntegras y en orden aunque tarden un poco más (por ejemplo, la transferencia de los planos de la Estrella de la Muerte). Estas diferencias corresponden al uso de distintos protocolos de transporte: UDP y TCP. Luke Skywalker, ahora piloteando su X-Wing y ejerciendo de líder en el ataque, te pregunta por qué percibe lagos de datos en unas transmisiones y retrasos en otras.
+
+Narrativa: En medio del fragor de la batalla, ves cómo R2-D2 proyecta diagramas de paquetes dentro del X-Wing de Luke. "Algunas de estas tramas van rápidas como el Halcón Milenario, pero otras llegan seguras como Yoda al Consejo," comenta Luke por el comunicador, intentando comprender. Tú, desde la sala de control, le explicas que siente la diferencia entre los dos grandes protocolos de la capa de transporte.
+
+Pregunta: Compara los protocolos TCP y UDP y sus características en contexto de la transmisión de datos. ¿Por qué TCP se considera un protocolo confiable y orientado a conexión, y qué implica eso en cuanto a rendimiento? ¿Por qué UDP es no confiable y sin conexión, y en qué casos su rapidez resulta ventajosa?​
+
+es.linkedin.com
+​
+es.linkedin.com
+. En tu respuesta, menciona ejemplos de aplicaciones o situaciones galácticas para cada protocolo: por ejemplo, qué tipo de datos enviarías mediante UDP durante una misión crítica, y cuál vía TCP en comunicaciones rutinarias. (Pista: TCP garantiza la entrega de datos completa y ordenada – ideal para transmitir planes estratégicos; UDP minimiza retrasos – útil para enviar coordenadas de combate en tiempo real, aunque alguna pueda perderse.).
+
+## Respuesta
+En medio del asalto a la nueva Estrella de la Muerte, los ingenieros de la Alianza Rebelde detectan distintos comportamientos en las transmisiones. Algunas  fluyen velozmente, aunque con pérdidas ocasionales. Otras  llegan completas pero con cierto retraso. El joven Skywalker nota esto y pregunta: "¿Por qué algunas señales llegan como cohetes, y otras como si atravesaran un campo de asteroides?"
+
+La respuesta está en la **capa de transporte** del modelo TCP/IP, donde operan dos grandes protocolos: **TCP** y **UDP**. Cada uno cumple una función estratégica distinta, como un Jedi y un contrabandista con estilos opuestos pero igual de útiles.
+
+###  ¿Por qué TCP se considera confiable y orientado a conexión?
+
+TCP (Transmission Control Protocol) establece una **"conexión" previa entre emisor y receptor**, como si ambos se dieran un apretón de manos antes de hablar. Esto implica que cada segmento de datos enviado requiere confirmación (ACK), y si no llega, se retransmite. Además, TCP ofrece características esenciales como el control de flujo, confirmación de entrega, corrección de errores y retransmisión de paquetes perdidos, garantizando así la integridad de los archivos transferidos. Aunque introduce una ligera latencia, esta es aceptable en aplicaciones donde la precisión y la fiabilidad son prioritarias.
+
+Todo esto lo convierte en un protocolo **lento pero seguro**, ideal cuando **la integridad de la información es prioritaria**, aunque eso implique cierta latencia.
+
+#### Ejemplos galácticos de uso de TCP:
+- Transferencia de los **planos de la Estrella de la Muerte**
+- Descarga de informes estratégicos desde la base Echo
+- Comunicaciones cifradas entre flotas en modo seguro
+
+
+### ¿Por qué UDP se considera rápido y no confiable?
+
+UDP (User Datagram Protocol) **no establece conexión**: simplemente lanza los paquetes sin asegurarse de que lleguen ni en qué orden. Esto reduce mucho la latencia y el uso de recursos, a costa de fiabilidad. No requiere confirmaciones ni mantiene el estado de la conexión, lo que reduce significativamente la latencia. Aunque puede haber pequeñas pérdidas de información, estas no afectan de forma significativa la calidad general del servicio, priorizando así la continuidad y la velocidad del flujo de datos.
+
+UDP es perfecto para **situaciones donde la velocidad es más importante que la precisión**, y donde perder uno o dos paquetes no compromete la misión.
+
+#### Ejemplos galácticos de uso de UDP:
+- Transmisión de **video en vivo desde una cámara en un X-Wing**
+- Envío de **coordenadas de combate** en tiempo real
+- Comunicación de sensores y telemetría de naves durante maniobras evasivas
+
+
+
+## Misión 5: Comunicación Segura o lado oscuro – Criptografía y Seguridad de la Red
+Situación: La victoria rebelde depende de que sus comunicaciones permanezcan secretas. Se rumorea que espías imperiales (e incluso usuarios del lado oscuro) intentan interceptar los mensajes de la Alianza. La líder Mon Mothma te encomienda diseñar un protocolo de comunicación cifrado para que los mensajes entre bases rebeldes no puedan ser leídos por el Imperio aunque sean capturados.
+
+Narrativa: En la sala de guerra de la base rebelde, Mon Mothma se dirige a ti con semblante serio: "Hemos logrado infiltrar agentes en Coruscant, pero comunicarse con ellos es arriesgado. El Imperio intercepta cualquier señal. Aprendiz, necesitamos que nuestras transmisiones sean indescifrables para el enemigo." A tu lado, C-3PO comenta nerviosamente en más de seis millones de formas de comunicación: "Si caemos en manos imperiales, prefiero que apaguen mis circuitos a revelar nuestros mensajes."
+
+Recuerdas que cifrar es esencial: usar claves secretas para que sólo los rebeldes autorizados puedan leer un mensaje. También piensas en las dos formas en que esto se puede lograr: con clave simétrica (una misma clave secreta compartida) o con claves públicas/privadas (criptografía asimétrica). Es hora de demostrar tu conocimiento en seguridad.
+
+Pregunta: Explica brevemente la diferencia entre cifrado simétrico y cifrado asimétrico en el contexto de las comunicaciones de la Alianza. ¿Cómo funciona cada esquema y qué ventajas ofrece?​
+
+blog.mailfence.com
+Por ejemplo, si Leia y Luke comparten una frase clave secreta para cifrar sus holomensajes, ¿qué tipo de cifrado es ese? En cambio, si la Alianza quiere enviar un mensaje a un nuevo aliado sin haber intercambiado una clave secreta previamente, ¿cómo podría ayudar el cifrado asimétrico (claves pública/privada) en ese caso? Comenta también sobre la importancia de autenticación y no repudio en los mensajes (cómo podemos estar seguros de que el mensaje no ha sido alterado y proviene realmente de quien dice ser). Finalmente, menciona por qué utilizar un protocolo seguro (como SSH en lugar de Telnet) es crucial al administrar remotamente los equipos de la red rebelde​
+hackernoon.com
+
+## Respuesta
+
+La victoria de la Alianza Rebelde depende de mantener sus comunicaciones en secreto. Espías imperiales y usuarios del lado oscuro intentan interceptar los mensajes de la Alianza. Mon Mothma te encomienda diseñar un protocolo de comunicación cifrado para que los mensajes entre bases rebeldes no puedan ser leídos por el Imperio, incluso si son capturados.
+
+### Cifrado Simétrico vs. Asimétrico
+
+#### Cifrado Simétrico
+
+En el cifrado simétrico, se utiliza la misma clave secreta tanto para cifrar como para descifrar la información. Es fundamental que todos los usuarios que quieran cifrar o descifrar el mensaje tengan esta clave secreta; de lo contrario, no podrán hacerlo. Este método es eficiente y rápido, pero presenta desafíos en la distribución segura de la clave.
+
+#### Cifrado Asimétrico
+
+El cifrado asimétrico utiliza un par de claves: una pública y otra privada. La clave pública se distribuye abiertamente, mientras que la clave privada se mantiene en secreto. Cualquiera puede cifrar un mensaje utilizando la clave pública del destinatario, pero solo el destinatario puede descifrarlo con su clave privada. Este método resuelve el problema de la distribución segura de claves.
+
+| Característica              | 🔑 Cifrado Simétrico                                 | 🔐 Cifrado Asimétrico                                  |
+|----------------------------|------------------------------------------------------|--------------------------------------------------------|
+| Número de claves           | 1 (misma clave para cifrar y descifrar)              | 2 (clave pública y clave privada)                      |
+| Intercambio de clave       | Requiere distribución segura de la clave secreta     | No necesita intercambiar claves privadas               |
+| Velocidad de operación     | Alta (rápido y eficiente)                            | Más lento (cálculos criptográficos más complejos)      |
+| Complejidad                | Menor                                                | Mayor                                                  |
+| Seguridad del intercambio  | Más vulnerable si la clave es interceptada           | Más seguro para comunicación inicial con desconocidos  |
+| Uso típico                 | Grandes volúmenes de datos, canales ya seguros       | Establecer comunicación segura sin clave previa        |
+| Ejemplo rebelde            | Leia y Luke comparten una frase clave secreta        | La Alianza envía un mensaje cifrado a un nuevo espía   |
+| Aplicación real            | AES, DES                                             | RSA, ECC                                               |
+
+
+### Autenticación y No Repudio
+La autenticación asegura que el mensaje proviene realmente de quien dice ser, mientras que el no repudio garantiza que el emisor no pueda negar haber enviado el mensaje. En el contexto de la Alianza, esto es crucial para evitar engaños y asegurar la integridad de las comunicaciones.
+
